@@ -3,6 +3,9 @@
 @section('content')
     <div class="container">
         <h1>I NOSTRI FUMETTI</h1>
+        @if (session('deleted'))
+          <div class="alert alert-success" role="alert"><strong>{{session('deleted')}}</strong> è stato eliminato correttamente</div>
+        @endif
         <section class="container">
           <table class="table">
             <thead>
@@ -21,13 +24,17 @@
                 <td>{{$comic->title}}</td>
                 <td>{{$comic->type}}</td>
                 <td>
-                  <a href="{{ route('comics.show', $comic->id)}}" class="btn btn-success">SHOW</a>
+                  <a href="{{ route('comics.show', $comic)}}" class="btn btn-success">SHOW</a>
                 </td>
                 <td>
-                  <a href="" class="btn btn-warning">EDIT</a>
+                  <a href="{{ route('comics.edit', $comic->id)}}" class="btn btn-warning">EDIT</a>
                 </td>
                 <td>
-                  <a href="" class="btn btn-danger">DELETE</a>
+                  <form action="{{ route('comics.destroy', $comic)}}" method="POST">
+                    @csrf
+                    @method('delete')
+                    <button class="btn btn-danger">DELETE</button>
+                  </form>
                 </td>
 
 

@@ -4,7 +4,7 @@
 @section('content')
   <section class="container">
     <div class="mt-5">
-      <h1>{{$comic['title']}}</h1>
+      <h1>{{$comic['title']}} <a href="{{ route('comics.edit', $comic)}}" class="btn btn-warning">EDIT</a></h1>
     </div>
 
     <div class="row mt-5">

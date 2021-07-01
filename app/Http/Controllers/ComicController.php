@@ -63,9 +63,9 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Comic $comic)
+    public function show($id)
     {
-        //$comic = Comic::find($id);
+        $comic = Comic::find($id);
         /* return view('comics.show', compact('comic')); */
         if($comic){
             return view('comics.show', compact('comic'));
@@ -81,7 +81,12 @@ class ComicController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comic = Comic::find($id);
+        /* return view('comics.edit', compact('comic')); */
+        if($comic){
+            return view('comics.edit', compact('comic'));
+        }
+        abort(404,'Fumetto non presente nel database!');
     }
 
     /**
@@ -91,9 +96,17 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comic $comic)
     {
-        //
+        //leggo il dato in arrivo dal form
+        $data = $request->all();
+        //dd($data);
+        //seleziono la riga della tabella da aggiornare
+        //$comic = Comic::find($id); --> $comic è l'entità originale non ancora sovrascritta
+        $data['slug'] = Str::slug($data['title'],'-');
+        $comic->update($data); 
+
+        return redirect()->route('comics.show', $comic);
     }
 
     /**
@@ -102,8 +115,10 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comic $comic)
     {
-        //
+        $comic->delete();
+        return redirect()->route('comics.index')->with('deleted',$comic->title); // serve a dare il messaggio che hai cancellato correttamente l'elemento
+        
     }
 }
